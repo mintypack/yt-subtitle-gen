@@ -1,0 +1,14 @@
+# Jetbrains stuff
+.idea
+
+
+# Python stuff
+.venv
+
+
+# Node stuff
+node_modules
+
+
+# Output dir
+/output

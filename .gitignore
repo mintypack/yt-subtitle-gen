@@ -4,6 +4,9 @@
 
 # Python stuff
 .venv
+__pycache__/
+*.pyc
+.pytest_cache/
 
 
 # Node stuff
@@ -12,3 +15,7 @@ node_modules
 
 # Output dir
 /output
+
+
+# Secrets
+.env

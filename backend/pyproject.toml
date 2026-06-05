@@ -3,5 +3,28 @@ name = "yt-subtitle-gen"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "faster-whisper>=1.2.1",
+    "python-dotenv>=1.2.2",
+    "torch>=2.8.0",
+    "torchaudio>=2.8.0",
+    "whisperx>=3.8.6",
     "yt-dlp>=2026.3.17",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

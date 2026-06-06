@@ -32,6 +32,7 @@ def _ensure_cuda_libs() -> None:
 
 def transcribe(audio_path: str | Path, model_size: str = "large-v3", device: str = "cuda",
                compute_type: str = "float16", diarize: bool = False,
+               language: str | None = None,
                min_speakers: int | None = None,
                max_speakers: int | None = None) -> tuple[list[Segment], str]:
     """Transcribe audio into word-timed, optionally speaker-labelled Segments.
@@ -62,7 +63,11 @@ def transcribe(audio_path: str | Path, model_size: str = "large-v3", device: str
     audio = whisperx.load_audio(str(audio_path))
 
     # ASR
-    model = whisperx.load_model(model_size, device, compute_type=compute_type)
+    if language:
+        print(f"Using language {language} for transcription")
+        model = whisperx.load_model(model_size, device, compute_type=compute_type, language=language)
+    else:
+        model = whisperx.load_model(model_size, device, compute_type=compute_type)
     result = model.transcribe(audio, batch_size=16)
     language = result["language"]
 
@@ -98,7 +103,15 @@ if __name__ == "__main__":
     paths = [a for a in sys.argv[1:] if not a.startswith("--")]
     diarize = "--diarize" in sys.argv
     audio = Path(paths[0])
-    segments, language = transcribe(audio, diarize=diarize)
+
+    lang_index = sys.argv.index('--language') + 1 if '--language' in sys.argv else None
+    if lang_index and lang_index < len(sys.argv):
+        language = sys.argv[lang_index]
+        segments, language = transcribe(audio, diarize=diarize, language=language)
+    else:
+        language = None
+        segments, language = transcribe(audio, diarize=diarize)
+
     srt_path = audio.with_suffix(".srt")
     write_srt(segments, srt_path)
     print(f"Language: {language}  diarization: {'on' if diarize else 'off'}")

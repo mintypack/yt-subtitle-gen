@@ -3,6 +3,7 @@ name = "yt-subtitle-gen"
 version = "0.1.0"
 requires-python = ">=3.13"
 dependencies = [
+    "demucs>=4.0.1",
     "faster-whisper>=1.2.1",
     "python-dotenv>=1.2.2",
     "torch>=2.8.0",
